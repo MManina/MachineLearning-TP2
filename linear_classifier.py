@@ -169,7 +169,7 @@ class LinearClassifier(object):
         
         loss = -np.log(sms[y]) + reg * np.power(np.linalg.norm(self.W), 2)
         
-        dW = np.matmul(np.matrix(sms - one_hot).T,np.matrix(x)) + 2*reg*self.W
+        dW = np.matmul(np.matrix(sms - one_hot).T,np.matrix(x))
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
