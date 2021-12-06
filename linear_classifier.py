@@ -95,8 +95,7 @@ class LinearClassifier(object):
         if self.bias:
             t_x = augment(X)
         
-        for i in range(X.shape[0]):
-            class_label[i] = np.argmax(self.W.dot(t_x[i].T))
+        class_label = np.argmax(self.W.dot(t_x.T), axis=0)
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
