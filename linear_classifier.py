@@ -91,7 +91,12 @@ class LinearClassifier(object):
         #############################################################################
         # TODO: Return the best class label.                                        #
         #############################################################################
-
+        t_x = X
+        if self.bias:
+            t_x = augment(X)
+        
+        for i in range(X.shape[0]):
+            class_label[i] = np.argmax(self.W.dot(t_x[i].T))
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
@@ -124,7 +129,6 @@ class LinearClassifier(object):
             
         label = self.predict(X)
         accu = (label == y).mean()
-        accu = accu / len(y)
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
@@ -160,15 +164,13 @@ class LinearClassifier(object):
         one_hot = np.zeros(self.num_classes)
         one_hot[y] = 1
             
-        a = self.W[y].dot(x.T)
-        a_ks = self.W.dot(x.T)
+        a = self.W.dot(x.T)
         
-        sm = np.exp(a)/np.sum(np.exp(a_ks))
-        sms = [np.exp(a_k)/np.sum(np.exp(a_ks)) for a_k in a_ks]
+        sms = np.exp(a)/np.sum(np.exp(a))
         
-        loss = -np.log(sm) + reg * np.power(np.linalg.norm(self.W), 2)
+        loss = -np.log(sms[y]) + reg * np.power(np.linalg.norm(self.W), 2)
         
-        dW = np.matmul(np.matrix(sms - one_hot).T,np.matrix(x))
+        dW = np.matmul(np.matrix(sms - one_hot).T,np.matrix(x)) + 2*reg*self.W
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
