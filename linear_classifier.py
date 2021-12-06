@@ -147,7 +147,18 @@ class LinearClassifier(object):
         # 3- Dont forget the regularization!                                        #
         # 4- Compute gradient => eq.(4.109)                                         #
         #############################################################################
-
+        one_hot = np.zeros(self.num_classes)
+        one_hot[y] = 1
+            
+        a = self.W[y].dot(x.T)
+        a_ks = self.W.dot(x.T)
+        
+        sm = np.exp(a)/np.sum(np.exp(a_ks))
+        sms = [np.exp(a_k)/np.sum(np.exp(a_ks)) for a_k in a_ks]
+        
+        loss = -np.log(sm) + reg * np.power(np.linalg.norm(self.W), 2)
+        
+        dW = np.matmul(np.matrix(sms - one_hot).T,np.matrix(x))
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
