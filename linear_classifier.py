@@ -91,7 +91,11 @@ class LinearClassifier(object):
         #############################################################################
         # TODO: Return the best class label.                                        #
         #############################################################################
-
+        t_x = X
+        if self.bias:
+            t_x = augment(X)
+        
+        class_label = np.argmax(self.W.dot(t_x.T), axis=0)
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
@@ -114,7 +118,16 @@ class LinearClassifier(object):
         #############################################################################
         # TODO: Compute the softmax loss & accuracy for a series of samples X,y .   #
         #############################################################################
+        for x_i,y_i in zip(X,y):   
+            if self.bias:
+                x_i = augment(x_i)         
+            loss_i, _ = self.cross_entropy_loss(x_i,y_i,reg)
+            loss += loss_i
 
+        loss = loss / len(y)
+            
+        label = self.predict(X)
+        accu = (label == y).mean()
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
@@ -147,7 +160,16 @@ class LinearClassifier(object):
         # 3- Dont forget the regularization!                                        #
         # 4- Compute gradient => eq.(4.109)                                         #
         #############################################################################
-
+        one_hot = np.zeros(self.num_classes)
+        one_hot[y] = 1
+            
+        a = self.W.dot(x.T)
+        
+        sms = np.exp(a)/np.sum(np.exp(a))
+        
+        loss = -np.log(sms[y]) + reg * np.power(np.linalg.norm(self.W), 2)
+        
+        dW = np.matmul(np.matrix(sms - one_hot).T,np.matrix(x)) + 2*reg*self.W
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
