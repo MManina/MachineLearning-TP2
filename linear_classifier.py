@@ -164,10 +164,14 @@ class LinearClassifier(object):
         one_hot[y] = 1
             
         a = self.W.dot(x.T)
-        
+        # Soustraction du maximum pour ameliorer la stabilite numerique
+        # ** Suggerer par une autre equipe 
+        a = a - a.max()
         sms = np.exp(a)/np.sum(np.exp(a))
         
-        loss = -np.log(sms[y]) + reg * np.power(np.linalg.norm(self.W), 2)
+        # Ajout d'un epsilon pour eviter les division par 0
+        # ** Suggerer par une autre equipe 
+        loss = -np.log(sms[y] + 1e-10) + reg * np.power(np.linalg.norm(self.W), 2)
         
         dW = np.matmul(np.matrix(sms - one_hot).T,np.matrix(x)) + 2*reg*self.W
         #############################################################################
