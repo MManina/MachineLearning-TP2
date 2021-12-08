@@ -97,6 +97,7 @@ class TwoLayerClassifier(object):
             #############################################################################
             # TODO: return the most probable class label for many samples               #
             #############################################################################
+            pred = np.zeros(x.shape[0])
             for i in range(len(x)):
                 pred[i] = np.argmax(self.net.forward(x[i]), axis=0)
             return pred
@@ -228,7 +229,7 @@ class TwoLayerNet(object):
         # 4- Compute gradient with respect to the score => eq.(4.109) with phi_n=1  #
         #############################################################################
         s = np.exp(scores) / sum(np.exp(scores))
-        loss = - np.log(s[y])
+        loss = - np.log(s[y]) + self.l2_reg * (pow(np.linalg.norm(self.layer1.W), 2) + pow(np.linalg.norm(self.layer2.W), 2))
 
         s_prime = s
         s_prime[y] -= 1
