@@ -124,7 +124,15 @@ class TwoLayerClassifier(object):
         #############################################################################
         # TODO: Compute the softmax loss & accuracy for a series of samples X,y .   #
         #############################################################################
+        N = len(y)
+        for i in range(N):
+            tmp, _ = self.net.cross_entropy_loss(self.net.forward(x[i]), y[i])
+            loss = loss + tmp
 
+        loss = loss / N
+
+        pred = self.predict(x)
+        accu = (pred == y).mean()
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
