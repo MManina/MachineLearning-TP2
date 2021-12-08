@@ -227,7 +227,13 @@ class TwoLayerNet(object):
         # 3- Dont forget the regularization!                                        #
         # 4- Compute gradient with respect to the score => eq.(4.109) with phi_n=1  #
         #############################################################################
+        s = np.exp(scores) / sum(np.exp(scores))
+        loss = - np.log(s[y])
 
+        s_prime = s
+        s_prime[y] -= 1
+
+        dloss_dscores = s_prime
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
