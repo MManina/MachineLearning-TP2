@@ -281,8 +281,16 @@ class DenseLayer(object):
         # TODO: Compute forward pass.  Do not forget to add 1 to x in case of bias  #
         # C.f. function augment(x)                                                  #
         #############################################################################
-        f = self.W[1] ## REMOVE THIS LINE
+        X = np.dot(self.W.T, x)
+        f = np.zeros(X.shape)
+        if self.activation == 'relu':
+            f = np.maximum(f, X)
 
+        elif self.activation == "sigmoid":
+            f = sigmoid(X)
+
+        else:
+            f = X
         #############################################################################
         #                          END OF YOUR CODE                                 #
         #############################################################################
